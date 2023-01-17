@@ -9,7 +9,11 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
+        gradlePluginPortal()
         mavenCentral()
+        maven{ url 'https://dl.bintray.com/kotlin/kotlin-eap'}
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "KolorNotes"
