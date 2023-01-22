@@ -1,13 +1,14 @@
 package com.zhvk.kolornotes
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -19,27 +20,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlin.random.Random
+import com.zhvk.kolornotes.domain.model.Note
+import com.zhvk.kolornotes.navigation.Screen
+import com.zhvk.kolornotes.presentation.main_screen.NotesViewModel
 
 @Composable
 fun MainScreen(
-    navController: NavController
+    navController: NavController,
+//    notesViewModel: NotesViewModel = NotesViewModel(noteRepository = KolorNotesApplication.),
+    notesViewModel: NotesViewModel = hiltViewModel()
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+//                .verticalScroll(rememberScrollState())
         ) {
             SearchCard({})
-            TableCards(4)
+            NoteCardList(notesViewModel)
         }
-        QuickActionBar(navController)
+        QuickActionBarMainScreen(navController)
     }
 }
 
@@ -100,59 +108,55 @@ fun SearchCard(
 }
 
 @Composable
-fun TableCards(
-    rowNumber: (Int)
+fun NoteCardList(
+//    notes: List<Note>,
+    noteViewModel: NotesViewModel
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(6.dp, 0.dp, 6.dp, 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround,
+        verticalArrangement = Arrangement.SpaceAround
     ) {
-        var i = 0
-        while (i < rowNumber) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(6.dp, 0.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                NoteCard(cardText = i.toString(), 0.5f)
-                NoteCard(cardText = i.toString(), 1f)
-            }
-            i++
+        items(noteViewModel.allNotes) { note ->
+            NoteCardItem(note = note, onClicked = { Log.d("MainScreen.kt", note.id.toString()) })
         }
     }
 }
 
 @Composable
-fun NoteCard(
-    cardText: (String),
-    fillPercentage: (Float)
+fun NoteCardItem(
+    note: (Note),
+    onClicked: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(fillPercentage)
+            .fillMaxWidth()
             .height(250.dp)
             .padding(6.dp)
-            .clickable {
-                // TODO Implement RecyclerView first
-            },
+            .clickable(onClick = { onClicked(note.id!!) }),
         shape = RoundedCornerShape(8.dp),
         elevation = 0.dp,
-        backgroundColor = randomElementFromGivenList(),
+        backgroundColor = colorResource(id = R.color.alice_blue)
+//        backgroundColor = note.backgroundColor
     ) {
-        Text(
-            text = cardText,
-            modifier = Modifier.padding(8.dp)
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+        ) {
+            Text(text = note.noteTitle!!, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = note.noteText!!)
+        }
     }
 }
 
 @Composable
 @Preview
 fun SimpleTextField() {
-    val textState = remember { mutableStateOf(TextFieldValue()) }
+    val textState = remember { mutableStateOf("initial_value") }
     TextField(
         value = textState.value,
         onValueChange = { textState.value = it }
@@ -160,21 +164,9 @@ fun SimpleTextField() {
 }
 
 @Composable
-fun randomElementFromGivenList(): Color {
-    val list =
-        listOf(
-            colorResource(id = R.color.pastel_blue),
-            colorResource(id = R.color.pastel_red),
-            colorResource(id = R.color.pastel_yellow),
-            colorResource(id = R.color.pastel_green),
-            colorResource(id = R.color.pastel_purple)
-        )
-    val randomIndex = Random.nextInt(list.size);
-    return list[randomIndex]
-}
-
-@Composable
-fun QuickActionBar(navController: NavController) {
+fun QuickActionBarMainScreen(navController: NavController) {
+    val noteTitle = stringResource(id = R.string.batman_ipsum)
+    val noteText = stringResource(id = R.string.batman_ipsum_2)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -187,7 +179,7 @@ fun QuickActionBar(navController: NavController) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "")
         }
         IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = {
-            navController.navigate(Screen.NoteScreen.route)
+            navController.navigate(Screen.NoteScreen.route + "?noteTitle=$noteTitle&noteText=$noteText")
         }) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription = "")
         }

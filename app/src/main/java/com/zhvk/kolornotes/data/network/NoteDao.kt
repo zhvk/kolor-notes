@@ -1,12 +1,17 @@
-package com.zhvk.kolornotes.dao
+package com.zhvk.kolornotes.data.network
 
 import androidx.room.*
-import com.zhvk.kolornotes.entity.Note
+import com.zhvk.kolornotes.domain.model.Note
 
 @Dao
 interface NoteDao {
+
+    @Query("SELECT * FROM notes WHERE id=:id")
+    fun findNoteById(id: Int): Note
+
     @Query("SELECT * FROM notes")
-    fun getAll(): List<Note>
+    fun getAllNotes(): List<Note>
+//    fun getAllNotes(): Flow<List<Note>>
 
 //    @Query("SELECT * FROM notes ORDER BY date_updated DESC")
 //    fun getAllOrdered(): List<Note>
@@ -19,11 +24,14 @@ interface NoteDao {
 //    fun findByName(first: String, last: String): Note
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(note: Note)
+    fun insertNote(note: Note)
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun insertAll(vararg notes: Note)
+    @Update
+    fun updateNote(note: Note)
 
     @Delete
-    fun delete(note: Note)
+    fun deleteNote(note: Note)
+
+    @Query("DELETE FROM notes")
+    fun deleteAllNotes()
 }
