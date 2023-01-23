@@ -16,10 +16,10 @@ abstract class NoteDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
 
-    companion object {
-        /*The value of a volatile variable will never be cached, and all writes and reads will be done to and from the main memory.
+    /*companion object {
+        *//*The value of a volatile variable will never be cached, and all writes and reads will be done to and from the main memory.
         This helps make sure the value of INSTANCE is always up-to-date and the same for all execution threads.
-        It means that changes made by one thread to INSTANCE are visible to all other threads immediately.*/
+        It means that changes made by one thread to INSTANCE are visible to all other threads immediately.*//*
         // Singleton prevents multiple instances of database opening at the same time.
         @Volatile
         private var INSTANCE: NoteDatabase? = null
@@ -43,9 +43,9 @@ abstract class NoteDatabase : RoomDatabase() {
                 instance
             }
         }
-    }
+    }*/
 
-    private class NoteDatabaseCallback(
+    /*private class NoteDatabaseCallback(
         private val context: Context,
         private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
@@ -68,5 +68,5 @@ abstract class NoteDatabase : RoomDatabase() {
                 noteDao.insertNote(note)
             }
         }
-    }
+    }*/
 }

@@ -3,30 +3,18 @@ package com.zhvk.kolornotes.domain.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.zhvk.kolornotes.core.Constants.Companion.NOTES_TABLE
 
 // Note UI State
-@Entity(tableName = "notes")
-public data class Note(
+@Entity(tableName = NOTES_TABLE)
+data class Note(
+    @ColumnInfo(name = "note_title") var noteTitle: String? = null,
+    @ColumnInfo(name = "note_text") var noteText: String? = null,
+    @ColumnInfo(name = "date_updated") var dateUpdated: String? = null,
+    @ColumnInfo(name = "image_path") var imagePath: String? = null,
+//    @ColumnInfo(name = "color") var backgroundColor: Color? = null,
+    @ColumnInfo(name = "web_url") var webUrl: String? = null
+) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val id: Int? = null, // TODO: Is this good?
-
-    @ColumnInfo(name = "note_title")
-    val noteTitle: String? = null,
-
-    @ColumnInfo(name = "note_text")
-    val noteText: String? = null,
-
-    @ColumnInfo(name = "date_updated")
-    val dateUpdated: String? = null,
-
-    @ColumnInfo(name = "image_path")
-    val imagePath: String? = null,
-
-//    @ColumnInfo(name = "color")
-//    @Ignore
-//    val backgroundColor: Color? = null,
-
-    @ColumnInfo(name = "web_url")
-    val webUrl: String? = null
-)
+    var id: Int = 0
+}

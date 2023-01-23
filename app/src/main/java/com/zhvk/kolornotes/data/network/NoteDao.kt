@@ -1,19 +1,20 @@
 package com.zhvk.kolornotes.data.network
 
 import androidx.room.*
+import com.zhvk.kolornotes.core.Constants.Companion.NOTES_TABLE
 import com.zhvk.kolornotes.domain.model.Note
 
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM notes WHERE id=:id")
+    @Query("SELECT * FROM $NOTES_TABLE WHERE id=:id")
     fun findNoteById(id: Int): Note
 
-    @Query("SELECT * FROM notes")
+    @Query("SELECT * FROM $NOTES_TABLE")
     fun getAllNotes(): List<Note>
 //    fun getAllNotes(): Flow<List<Note>>
 
-//    @Query("SELECT * FROM notes ORDER BY date_updated DESC")
+//    @Query("SELECT * FROM $NOTES_TABLE ORDER BY date_updated DESC")
 //    fun getAllOrdered(): List<Note>
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
@@ -32,6 +33,6 @@ interface NoteDao {
     @Delete
     fun deleteNote(note: Note)
 
-    @Query("DELETE FROM notes")
+    @Query("DELETE FROM $NOTES_TABLE")
     fun deleteAllNotes()
 }

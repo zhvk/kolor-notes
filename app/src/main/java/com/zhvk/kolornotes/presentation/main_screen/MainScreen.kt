@@ -35,9 +35,10 @@ import com.zhvk.kolornotes.presentation.main_screen.NotesViewModel
 @Composable
 fun MainScreen(
     navController: NavController,
-//    notesViewModel: NotesViewModel = NotesViewModel(noteRepository = KolorNotesApplication.),
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
+    populateDatabase(notesViewModel)
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Column(
             modifier = Modifier
@@ -186,5 +187,18 @@ fun QuickActionBarMainScreen(navController: NavController) {
         IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = {/* TODO */ }) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
         }
+    }
+}
+
+@Composable
+fun populateDatabase(
+    notesViewModel: NotesViewModel
+) {
+    // Delete all content here.
+    notesViewModel.deleteAllNotes()
+
+    // Add sample notes.
+    for (note in getNotesComposable()) {
+        notesViewModel.addNote(note)
     }
 }
