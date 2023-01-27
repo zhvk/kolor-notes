@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">KolorNotes</string>
+
+    <string name="search_hint">Start searching notes…</string>
+    <string name="note_title_hint">Title</string>
+    <string name="note_body_hint">Note</string>
+
     <string name="batman_ipsum">Batman Ipsum</string>
     <string name="batman_ipsum_1">Bats frighten me. It\'s time my enemies shared my dread. Swear to me!</string>
     <string name="batman_ipsum_2">Someone like you. Someone who\'ll rattle the cages. I seek the means to fight injustice. To turn fear against those who prey on the fearful.</string>

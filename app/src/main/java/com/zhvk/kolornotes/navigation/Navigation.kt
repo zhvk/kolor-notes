@@ -1,4 +1,4 @@
-package com.zhvk.kolornotes
+package com.zhvk.kolornotes.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.zhvk.kolornotes.core.Constants.Companion.NOTE_ID
-import com.zhvk.kolornotes.navigation.Screen.MainScreen
-import com.zhvk.kolornotes.navigation.Screen.NoteScreen
+import com.zhvk.kolornotes.presentation.main_screen.MainScreen
+import com.zhvk.kolornotes.presentation.note_screen.NoteScreen
 
 @Composable
 fun Navigation(
@@ -16,23 +16,24 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = MainScreen.route
+        startDestination = Screen.MainScreen.route
     ) {
         composable(
-            route = MainScreen.route
+            route = Screen.MainScreen.route
         ) {
             MainScreen(navController = navController)
         }
         composable(
-            route = NoteScreen.route + "?$NOTE_ID={$NOTE_ID}",
+            route = Screen.NoteScreen.route + "?$NOTE_ID={noteId}",
             arguments = listOf(
                 navArgument(NOTE_ID) {
                     type = NavType.IntType
-                    defaultValue = ""
+                    defaultValue = 0
                 }
             )
         ) { backStackEntry ->
             NoteScreen(
+                navController = navController,
                 noteId = backStackEntry.arguments?.getInt(NOTE_ID)
             )
         }

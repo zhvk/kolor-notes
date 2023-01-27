@@ -70,6 +70,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version") // To use Kotlin annotation processing tool (kapt)
 //    ksp("androidx.room:room-compiler:$room_version") // To use Kotlin Symbol Processing (KSP)
+    implementation "androidx.room:room-ktx:$room_version"
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     // Other

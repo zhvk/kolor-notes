@@ -3,16 +3,16 @@ package com.zhvk.kolornotes.data.network
 import androidx.room.*
 import com.zhvk.kolornotes.core.Constants.Companion.NOTES_TABLE
 import com.zhvk.kolornotes.domain.model.Note
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
 
     @Query("SELECT * FROM $NOTES_TABLE WHERE id=:id")
-    fun findNoteById(id: Int): Note
+    fun findNoteById(id: Int): Flow<Note>
 
     @Query("SELECT * FROM $NOTES_TABLE")
-    fun getAllNotes(): List<Note>
-//    fun getAllNotes(): Flow<List<Note>>
+    fun getAllNotes(): Flow<List<Note>>
 
 //    @Query("SELECT * FROM $NOTES_TABLE ORDER BY date_updated DESC")
 //    fun getAllOrdered(): List<Note>

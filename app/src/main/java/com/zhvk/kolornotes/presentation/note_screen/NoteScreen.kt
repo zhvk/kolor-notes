@@ -1,5 +1,6 @@
-package com.zhvk.kolornotes
+package com.zhvk.kolornotes.presentation.note_screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,16 +12,26 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.zhvk.kolornotes.R
+import com.zhvk.kolornotes.getCurrentDateTime
+import com.zhvk.kolornotes.presentation.main_screen.NotesViewModel
+import com.zhvk.kolornotes.toString
 
 @Composable
 fun NoteScreen(
+    navController: NavController,
+    notesViewModel: NotesViewModel = hiltViewModel(),
     noteId: Int?
 ) {
 
@@ -30,7 +41,8 @@ fun NoteScreen(
                 .fillMaxSize()
                 .background(colorResource(id = R.color.white))
         ) {
-            Note(noteId)
+            Log.d("NoteScreen.kt", "ID from NoteScreen(): " + noteId.toString())
+            Note(navController, notesViewModel, noteId)
         }
         QuickActionBarNoteScreen()
     }
@@ -38,12 +50,10 @@ fun NoteScreen(
 
 @Composable
 fun Note(
-    noteId: Int?,
-//    onTitleChange: () -> Unit
+    navController: NavController,
+    notesViewModel: NotesViewModel,
+    noteId: Int?
 ) {
-    val noteTitle = "Note Title"
-    val noteText = "Note Text"
-
     // Toolbar
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -51,7 +61,7 @@ fun Note(
     ) {
         IconButton(onClick = {
             // TODO OnBackPressed
-//            navController.popBackStack()
+            navController.popBackStack()
         }) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
         }
@@ -63,8 +73,12 @@ fun Note(
     }
 
     // Note
-    val noteTitleState = remember { mutableStateOf(noteTitle) }
-    val noteTextState = remember { mutableStateOf(noteText) }
+    if (noteId != null && noteId != 0)
+        LaunchedEffect(Unit) {
+            notesViewModel.getNote(noteId)
+        }
+
+    val noteState = notesViewModel.note.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -76,8 +90,19 @@ fun Note(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp),
-            value = noteTitleState.value,
-            onValueChange = { noteTitleState.value = it },
+            value = noteState.noteTitle ?: "",
+            onValueChange = { notesViewModel.updateNote(noteState.copy(noteTitle = it)) },
+            placeholder = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        modifier = Modifier.alpha(ContentAlpha.medium),
+                        text = stringResource(id = R.string.note_title_hint)
+                    )
+                }
+            },
             colors = TextFieldDefaults.textFieldColors(
 //                textColor = Color.Gray,
 //                disabledTextColor = Color.Transparent,
@@ -88,17 +113,21 @@ fun Note(
             )
         )
 
-        val n = 0
-        ClickCounter(n, onClick = {
-            //n = 1
-        })
-
-        SharedPrefsToggle("Hi", true, {})
-
         TextField(
             modifier = Modifier.fillMaxSize(),
-            value = noteTextState.value,
-            onValueChange = { noteTextState.value = it },
+            value = noteState.noteBody ?: "",
+            onValueChange = { notesViewModel.updateNote(noteState.copy(noteBody = it)) },
+            placeholder = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        modifier = Modifier.alpha(ContentAlpha.medium),
+                        text = stringResource(id = R.string.note_body_hint)
+                    )
+                }
+            },
             colors = TextFieldDefaults.textFieldColors(
 //                textColor = Color.Gray,
 //                disabledTextColor = Color.Transparent,
@@ -131,24 +160,5 @@ fun QuickActionBarNoteScreen() {
         IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = {/* TODO */ }) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = "")
         }
-    }
-}
-
-@Composable
-fun ClickCounter(clicks: Int, onClick: () -> Unit) {
-    Button(onClick = onClick) {
-        Text("I've been clicked $clicks times")
-    }
-}
-
-@Composable
-fun SharedPrefsToggle(
-    text: String,
-    value: Boolean,
-    onValueChanged: (Boolean) -> Unit
-) {
-    Row {
-        Text(text)
-        Checkbox(checked = value, onCheckedChange = onValueChanged)
     }
 }

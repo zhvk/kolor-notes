@@ -1,4 +1,4 @@
-package com.zhvk.kolornotes
+package com.zhvk.kolornotes.presentation.main_screen
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -28,25 +28,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.zhvk.kolornotes.R
+import com.zhvk.kolornotes.core.Constants.Companion.NOTE_ID
 import com.zhvk.kolornotes.domain.model.Note
+import com.zhvk.kolornotes.getNotesComposable
 import com.zhvk.kolornotes.navigation.Screen
-import com.zhvk.kolornotes.presentation.main_screen.NotesViewModel
 
 @Composable
 fun MainScreen(
     navController: NavController,
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
-    populateDatabase(notesViewModel)
+//    PopulateDatabase(notesViewModel)
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-//                .verticalScroll(rememberScrollState())
         ) {
             SearchCard({})
-            NoteCardList(notesViewModel)
+            NoteCardList(notesViewModel, navController)
         }
         QuickActionBarMainScreen(navController)
     }
@@ -77,7 +78,7 @@ fun SearchCard(
                 ) {
                     Text(
                         modifier = Modifier.alpha(ContentAlpha.medium),
-                        text = "Start searching notes..."
+                        text = stringResource(id = R.string.search_hint)
                     )
                 }
             },
@@ -110,8 +111,8 @@ fun SearchCard(
 
 @Composable
 fun NoteCardList(
-//    notes: List<Note>,
-    noteViewModel: NotesViewModel
+    notesViewModel: NotesViewModel,
+    navController: NavController
 ) {
     LazyColumn(
         modifier = Modifier
@@ -120,8 +121,10 @@ fun NoteCardList(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        items(noteViewModel.allNotes) { note ->
-            NoteCardItem(note = note, onClicked = { Log.d("MainScreen.kt", note.id.toString()) })
+        items(notesViewModel.allNotes.value) { note ->
+            NoteCardItem(note = note, onClicked = {
+                navController.navigate(Screen.NoteScreen.route + "?$NOTE_ID=${it}")
+            })
         }
     }
 }
@@ -136,7 +139,7 @@ fun NoteCardItem(
             .fillMaxWidth()
             .height(250.dp)
             .padding(6.dp)
-            .clickable(onClick = { onClicked(note.id!!) }),
+            .clickable(onClick = { onClicked(note.id) }),
         shape = RoundedCornerShape(8.dp),
         elevation = 0.dp,
         backgroundColor = colorResource(id = R.color.alice_blue)
@@ -147,9 +150,9 @@ fun NoteCardItem(
                 .fillMaxSize()
                 .padding(12.dp)
         ) {
-            Text(text = note.noteTitle!!, fontWeight = FontWeight.Bold)
+            Text(text = "[" + note.id.toString() + "] " + note.noteTitle!!, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(10.dp))
-            Text(text = note.noteText!!)
+            Text(text = note.noteBody!!)
         }
     }
 }
@@ -166,8 +169,6 @@ fun SimpleTextField() {
 
 @Composable
 fun QuickActionBarMainScreen(navController: NavController) {
-    val noteTitle = stringResource(id = R.string.batman_ipsum)
-    val noteText = stringResource(id = R.string.batman_ipsum_2)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,7 +181,7 @@ fun QuickActionBarMainScreen(navController: NavController) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "")
         }
         IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = {
-            navController.navigate(Screen.NoteScreen.route + "?noteTitle=$noteTitle&noteText=$noteText")
+            navController.navigate(Screen.NoteScreen.route)
         }) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription = "")
         }
@@ -190,12 +191,15 @@ fun QuickActionBarMainScreen(navController: NavController) {
     }
 }
 
+// TODO: Implement Create Note
+
+// TODO: Populate Database only if DB is empty
 @Composable
-fun populateDatabase(
+fun PopulateDatabase(
     notesViewModel: NotesViewModel
 ) {
     // Delete all content here.
-    notesViewModel.deleteAllNotes()
+//    notesViewModel.deleteAllNotes()
 
     // Add sample notes.
     for (note in getNotesComposable()) {
