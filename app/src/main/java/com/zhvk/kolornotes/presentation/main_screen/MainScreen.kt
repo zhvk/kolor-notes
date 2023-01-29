@@ -1,6 +1,5 @@
 package com.zhvk.kolornotes.presentation.main_screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,13 +33,17 @@ import com.zhvk.kolornotes.core.Constants.Companion.NOTE_ID
 import com.zhvk.kolornotes.domain.model.Note
 import com.zhvk.kolornotes.getNotesComposable
 import com.zhvk.kolornotes.navigation.Screen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun MainScreen(
     navController: NavController,
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
-//    PopulateDatabase(notesViewModel)
+
+    // Load Notes each time you get on this screen
+    notesViewModel.getAllNotes()
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Column(
@@ -190,8 +194,6 @@ fun QuickActionBarMainScreen(navController: NavController) {
         }
     }
 }
-
-// TODO: Implement Create Note
 
 // TODO: Populate Database only if DB is empty
 @Composable

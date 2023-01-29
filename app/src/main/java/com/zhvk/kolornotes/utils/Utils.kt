@@ -11,8 +11,8 @@ fun getCurrentDateTime(): Date {
     return Calendar.getInstance().time
 }
 
-fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
-    val formatter = SimpleDateFormat(format, locale)
+fun Date.toString(format: String?, locale: Locale = Locale.getDefault()): String {
+    val formatter = SimpleDateFormat(format ?: "dd.MM.yyyy HH:mm", locale)
     return formatter.format(this)
 }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhvk.kolornotes.data.repository.NoteRepository
 import com.zhvk.kolornotes.domain.model.Note
+import com.zhvk.kolornotes.getCurrentDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,16 +41,19 @@ class NotesViewModel @Inject constructor(
     }
 
     fun addNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
+        note.dateUpdated = getCurrentDateTime().toString()
         noteRepository.addNoteToRoom(note)
 
         // If you want to do your data loading on the IO thread, you need to switch back to the UI
         // thread after you've retrieved the data.
         withContext(Dispatchers.Main) {
             getAllNotes()
+//            getNote(note.id)
         }
     }
 
     fun updateNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
+        note.dateUpdated = getCurrentDateTime().toString()
         noteRepository.updateNoteInRoom(note)
     }
 
