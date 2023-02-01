@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.zhvk.kolornotes.data.repository.NoteRepository
 import com.zhvk.kolornotes.domain.model.Note
 import com.zhvk.kolornotes.domain.model.NoteColor
-import com.zhvk.kolornotes.getCurrentDateTime
+import com.zhvk.kolornotes.utils.getCurrentDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

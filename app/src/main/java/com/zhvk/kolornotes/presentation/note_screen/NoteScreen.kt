@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zhvk.kolornotes.R
 import com.zhvk.kolornotes.domain.model.Note
-import com.zhvk.kolornotes.noteColorValue
+import com.zhvk.kolornotes.utils.noteColorValue
 import com.zhvk.kolornotes.presentation.main_screen.NotesViewModel
 
 @Composable

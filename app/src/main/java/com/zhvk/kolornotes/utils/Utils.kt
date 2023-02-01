@@ -1,9 +1,10 @@
-package com.zhvk.kolornotes
+package com.zhvk.kolornotes.utils
 
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import com.zhvk.kolornotes.R
 import com.zhvk.kolornotes.domain.model.Note
 import com.zhvk.kolornotes.domain.model.NoteColor
 import java.text.SimpleDateFormat
