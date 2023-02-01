@@ -1,5 +1,7 @@
 package com.zhvk.kolornotes.presentation.note_screen
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,132 +11,74 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zhvk.kolornotes.R
 import com.zhvk.kolornotes.domain.model.Note
+import com.zhvk.kolornotes.noteColorValue
 import com.zhvk.kolornotes.presentation.main_screen.NotesViewModel
 
 @Composable
 fun NoteScreen(
     navController: NavController,
     notesViewModel: NotesViewModel = hiltViewModel(),
-    noteId: Int?
-) {
-
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.white))
-        ) {
-            Toolbar(goBackAndSaveNote = {
-//                TODO: Save note
-                navController.navigateUp()
-            })
-
-            // TODO: Rade i 1. i 2. NoteComposable kako treba... E sad treba da nadjem resenje da mi
-            //  ne trebaju 2 funkcije nego jedna zato sto mi treba objekat Note-a i za Toolbar i za
-            //  QuickActionBar
-            if (noteId != null && noteId != 0) NoteComposable(navController, notesViewModel, noteId)
-            else NoteComposable(navController, notesViewModel)
-
-        }
-        QuickActionBarNoteScreen(null, {})
-    }
-}
-
-@Composable
-fun NoteComposable(
-    navController: NavController,
-    notesViewModel: NotesViewModel,
-    noteId: Int
+    noteId: Long?
 ) {
     // Get Note State
-//    if (noteId != null && noteId != 0)
-    LaunchedEffect(Unit) {
-        notesViewModel.getNote(noteId)
-    }
+    if (noteId != null && noteId != 0L) // TODO: Test w/o this because noteId should always be passed
+        LaunchedEffect(Unit) {
+            notesViewModel.getNote(noteId)
+        }
     val noteState = notesViewModel.note.collectAsState().value
+    val context = LocalContext.current
 
-    // Note UI
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .background(noteColorValue(noteState.backgroundColor)),
+        contentAlignment = Alignment.BottomCenter
     ) {
-
-        // Note title
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 10.dp),
-            value = noteState.noteTitle ?: "",
-            onValueChange = { notesViewModel.updateNote(noteState.copy(noteTitle = it)) },
-            placeholder = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text(
-                        modifier = Modifier.alpha(ContentAlpha.medium),
-                        text = stringResource(id = R.string.note_title_hint)
-                    )
-                }
-            },
-            colors = TextFieldDefaults.textFieldColors(
-//                textColor = Color.Gray,
-//                disabledTextColor = Color.Transparent,
-                backgroundColor = Color.Blue,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            )
-        )
-
-        // Note body
-        TextField(
-            modifier = Modifier.fillMaxSize(),
-            value = noteState.noteBody ?: "",
-            onValueChange = { notesViewModel.updateNote(noteState.copy(noteBody = it)) },
-            placeholder = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.TopStart
-                ) {
-                    Text(
-                        modifier = Modifier.alpha(ContentAlpha.medium),
-                        text = stringResource(id = R.string.note_body_hint)
-                    )
-                }
-            },
-            colors = TextFieldDefaults.textFieldColors(
-//                textColor = Color.Gray,
-//                disabledTextColor = Color.Transparent,
-                backgroundColor = Color.Red,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            )
-        )
+        Column(modifier = Modifier.fillMaxSize()) {
+            Toolbar(goBackAndSaveNote = { navController.navigateUp() })
+            NoteComposable(notesViewModel = notesViewModel, noteState = noteState)
+        }
+        QuickActionBarNoteScreen(
+            lastUpdateDate = noteState.dateUpdated,
+            shareNote = { shareNote(context, noteState) },
+            goBackAndDeleteNote = {
+                navController.navigateUp()
+                notesViewModel.deleteNote(noteState) // TODO: Why the f is this crashing?!
+            })
     }
+}
+
+fun shareNote(context: Context, note: Note) {
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, note.noteTitle + "\n" + note.noteBody)
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    context.startActivity(shareIntent)
 }
 
 @Composable
 fun NoteComposable(
-    navController: NavController,
-    notesViewModel: NotesViewModel
+    notesViewModel: NotesViewModel,
+    noteState: Note
 ) {
-    val noteTitleInitialValue = remember { mutableStateOf("") }
-    val noteBodyInitialValue = remember { mutableStateOf("") }
 
     // Note UI
     Column(
@@ -148,8 +92,9 @@ fun NoteComposable(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(0.dp, 10.dp),
-            value = noteTitleInitialValue.value,
-            onValueChange = { noteTitleInitialValue.value = it },
+            value = noteState.noteTitle!! /*noteState.noteTitle ?: ""*/,
+            onValueChange = { notesViewModel.updateNote(noteState.copy(noteTitle = it)) },
+            textStyle = TextStyle.Default.copy(fontSize = 24.sp),
             placeholder = {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -157,14 +102,15 @@ fun NoteComposable(
                 ) {
                     Text(
                         modifier = Modifier.alpha(ContentAlpha.medium),
-                        text = stringResource(id = R.string.note_title_hint)
+                        text = stringResource(id = R.string.note_title_hint),
+                        fontSize = 24.sp
                     )
                 }
             },
             colors = TextFieldDefaults.textFieldColors(
 //                textColor = Color.Gray,
 //                disabledTextColor = Color.Transparent,
-                backgroundColor = Color.Blue,
+                backgroundColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
@@ -174,8 +120,8 @@ fun NoteComposable(
         // Note body
         TextField(
             modifier = Modifier.fillMaxSize(),
-            value = noteBodyInitialValue.value,
-            onValueChange = { noteBodyInitialValue.value = it },
+            value = noteState.noteBody!! /*noteState.noteBody ?: ""*/,
+            onValueChange = { notesViewModel.updateNote(noteState.copy(noteBody = it)) },
             placeholder = {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -196,21 +142,6 @@ fun NoteComposable(
                 disabledIndicatorColor = Color.Transparent
             )
         )
-
-        TextButton(
-            onClick = {
-                val note = Note(
-                    id = 0,
-                    noteTitle = noteTitleInitialValue.value,
-                    noteBody = noteBodyInitialValue.value
-                )
-                notesViewModel.addNote(note)
-            }
-        ) {
-            Text(
-                text = "Add Note"
-            )
-        }
     }
 }
 
@@ -236,22 +167,22 @@ fun Toolbar(
 @Composable
 fun QuickActionBarNoteScreen(
     lastUpdateDate: String?,
-    goBackAndSaveNote: () -> Unit
+    shareNote: () -> Unit,
+    goBackAndDeleteNote: () -> Unit
 ) {
     val dateInString = lastUpdateDate ?: "a few seconds ago"
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
-            .background(colorResource(id = R.color.mint_cream)),
+            .height(48.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = {/* TODO */ }) {
+        IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = shareNote) {
             Icon(imageVector = Icons.Default.Share, contentDescription = "")
         }
         Text(modifier = Modifier.padding(4.dp, 0.dp), text = "Edited $dateInString")
-        IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = goBackAndSaveNote) {
+        IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = goBackAndDeleteNote) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = "")
         }
     }

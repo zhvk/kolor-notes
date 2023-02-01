@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface NoteDao {
 
     @Query("SELECT * FROM $NOTES_TABLE WHERE id=:id")
-    fun findNoteById(id: Int): Flow<Note>
+    fun findNoteById(id: Long): Flow<Note>
 
     @Query("SELECT * FROM $NOTES_TABLE")
     fun getAllNotes(): Flow<List<Note>>
@@ -25,7 +25,7 @@ interface NoteDao {
 //    fun findByName(first: String, last: String): Note
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNote(note: Note)
+    fun insertNote(note: Note) : Long
 
     @Update
     fun updateNote(note: Note)

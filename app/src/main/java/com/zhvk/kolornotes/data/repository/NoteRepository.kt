@@ -8,9 +8,9 @@ class NoteRepository(
 ) {
     fun getAllNotesFromRoom() = noteDao.getAllNotes()
 
-    fun getNoteFromRoom(id: Int) = noteDao.findNoteById(id)
+    fun getNoteFromRoom(id: Long) = noteDao.findNoteById(id)
 
-    fun addNoteToRoom(note: Note) = noteDao.insertNote(note)
+    fun addNoteToRoom(note: Note) : Long = noteDao.insertNote(note)
 
     fun updateNoteInRoom(note: Note) = noteDao.updateNote(note)
 

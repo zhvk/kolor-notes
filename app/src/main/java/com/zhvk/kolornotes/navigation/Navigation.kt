@@ -27,14 +27,14 @@ fun Navigation(
             route = Screen.NoteScreen.route + "?$NOTE_ID={noteId}",
             arguments = listOf(
                 navArgument(NOTE_ID) {
-                    type = NavType.IntType
+                    type = NavType.LongType
                     defaultValue = 0
                 }
             )
         ) { backStackEntry ->
             NoteScreen(
                 navController = navController,
-                noteId = backStackEntry.arguments?.getInt(NOTE_ID)
+                noteId = backStackEntry.arguments?.getLong(NOTE_ID)
             )
         }
     }

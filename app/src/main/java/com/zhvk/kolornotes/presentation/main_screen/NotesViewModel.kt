@@ -1,9 +1,11 @@
 package com.zhvk.kolornotes.presentation.main_screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhvk.kolornotes.data.repository.NoteRepository
 import com.zhvk.kolornotes.domain.model.Note
+import com.zhvk.kolornotes.domain.model.NoteColor
 import com.zhvk.kolornotes.getCurrentDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -34,26 +36,36 @@ class NotesViewModel @Inject constructor(
         }.launchIn(this)
     }*/
 
-    fun getNote(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun getNote(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         noteRepository.getNoteFromRoom(id).collectLatest {
             note.value = it // UI state is updated at this point
+            Log.d("TAG", "Note gotten: " + note.value.toString())
         }
     }
 
-    fun addNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
-        note.dateUpdated = getCurrentDateTime().toString()
-        noteRepository.addNoteToRoom(note)
-
+    fun addNote(newNote: Note) = viewModelScope.launch(Dispatchers.IO) {
+        Log.d("TAG", "Note to be added: $newNote")
+        newNote.dateUpdated = getCurrentDateTime(null)
+        val newId = noteRepository.addNoteToRoom(newNote)
+        Log.d("TAG", "New ID: $newId")
         // If you want to do your data loading on the IO thread, you need to switch back to the UI
         // thread after you've retrieved the data.
         withContext(Dispatchers.Main) {
             getAllNotes()
-//            getNote(note.id)
+            getNote(newId)
+            Log.d("TAG", "Note added?: " + note.value.toString())
         }
     }
 
+    suspend fun addBlankNote(): Long {
+        val newNote = Note()
+        newNote.dateUpdated = getCurrentDateTime(null)
+        newNote.backgroundColor = NoteColor.values().random()
+        return noteRepository.addNoteToRoom(newNote)
+    }
+
     fun updateNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
-        note.dateUpdated = getCurrentDateTime().toString()
+        note.dateUpdated = getCurrentDateTime(null)
         noteRepository.updateNoteInRoom(note)
     }
 

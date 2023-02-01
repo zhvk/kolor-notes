@@ -12,9 +12,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zhvk.kolornotes.R
@@ -33,7 +34,9 @@ import com.zhvk.kolornotes.core.Constants.Companion.NOTE_ID
 import com.zhvk.kolornotes.domain.model.Note
 import com.zhvk.kolornotes.getNotesComposable
 import com.zhvk.kolornotes.navigation.Screen
+import com.zhvk.kolornotes.noteColorValue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -45,7 +48,12 @@ fun MainScreen(
     // Load Notes each time you get on this screen
     notesViewModel.getAllNotes()
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.cultured)),
+        contentAlignment = Alignment.BottomCenter
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -53,7 +61,7 @@ fun MainScreen(
             SearchCard({})
             NoteCardList(notesViewModel, navController)
         }
-        QuickActionBarMainScreen(navController)
+        QuickActionBarMainScreen(navController, notesViewModel)
     }
 }
 
@@ -136,7 +144,7 @@ fun NoteCardList(
 @Composable
 fun NoteCardItem(
     note: (Note),
-    onClicked: (Int) -> Unit
+    onClicked: (Long) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -146,17 +154,30 @@ fun NoteCardItem(
             .clickable(onClick = { onClicked(note.id) }),
         shape = RoundedCornerShape(8.dp),
         elevation = 0.dp,
-        backgroundColor = colorResource(id = R.color.alice_blue)
-//        backgroundColor = note.backgroundColor
+        backgroundColor = noteColorValue(note.backgroundColor)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp)
+        Box(    // TODO: Remove this box later it's just for showing ID in the bottom right corner
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
         ) {
-            Text(text = "[" + note.id.toString() + "] " + note.noteTitle!!, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = note.noteBody!!)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = note.noteTitle!!,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = note.noteBody!!)
+            }
+            Text(
+                modifier = Modifier.padding(12.dp),
+                text = note.id.toString(),
+                fontWeight = FontWeight.ExtraLight,
+                fontSize = 10.sp
+            )
         }
     }
 }
@@ -172,7 +193,12 @@ fun SimpleTextField() {
 }
 
 @Composable
-fun QuickActionBarMainScreen(navController: NavController) {
+fun QuickActionBarMainScreen(
+    navController: NavController,
+    notesViewModel: NotesViewModel
+) {
+    val scope = rememberCoroutineScope()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -185,7 +211,20 @@ fun QuickActionBarMainScreen(navController: NavController) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "")
         }
         IconButton(modifier = Modifier.padding(4.dp, 0.dp), onClick = {
-            navController.navigate(Screen.NoteScreen.route)
+            scope.launch {
+                val newId: Long
+
+                // Coroutine Scope, once you launch it, has its own "thread" it is working on. That is
+                // Dispatchers.Main in this case. We need to use withContext to tell the Coroutine to
+                // switch to a new "thread", Dispatchers.IO because database Insert function can't be
+                // run on the main thread. That's why only this part of the code must be run on the IO
+                // (Input/Output, for disc and network operations
+                withContext(Dispatchers.IO) {
+                    newId = notesViewModel.addBlankNote()
+                }
+
+                navController.navigate(Screen.NoteScreen.route + "?$NOTE_ID=${newId}")
+            }
         }) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription = "")
         }

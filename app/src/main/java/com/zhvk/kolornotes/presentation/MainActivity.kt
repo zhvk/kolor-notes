@@ -14,10 +14,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navHostController = rememberNavController()
             Navigation(navHostController)
-
-            /*val coroutineScope = CoroutineScope(Dispatchers.Main)
-            val database by lazy { NoteDatabase.getInstance(this, coroutineScope)}
-            val repository by lazy { NoteRepository(database.noteDao()) }*/
         }
 
     }

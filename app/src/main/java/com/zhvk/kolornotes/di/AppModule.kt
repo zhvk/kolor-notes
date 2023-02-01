@@ -25,7 +25,7 @@ class AppModule {
         context,
         NoteDatabase::class.java,
         NOTES_DB
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     /*@Provides
     fun provideNotesDatabase2(@ApplicationContext context : Context): NoteDatabase {
