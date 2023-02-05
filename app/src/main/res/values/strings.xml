@@ -4,6 +4,7 @@
     <string name="search_hint">Start searching notes…</string>
     <string name="note_title_hint">Title</string>
     <string name="note_body_hint">Note</string>
+    <string name="note_pick_color_header">Color</string>
 
     <string name="batman_ipsum">Batman Ipsum</string>
     <string name="batman_ipsum_1">Bats frighten me. It\'s time my enemies shared my dread. Swear to me!</string>

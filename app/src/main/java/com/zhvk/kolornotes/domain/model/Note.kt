@@ -17,6 +17,13 @@ data class Note(
     @ColumnInfo(name = "web_url") var webUrl: String? = null
 )
 
+data class NoteColorItem(
+    val selected: Boolean = false,
+    val color: NoteColor = NoteColor.WHITE
+) {
+
+}
+
 enum class NoteColor() {
-    WHITE, PURPLE, RED, YELLOW, GREEN, BLUE
+    WHITE, RED, YELLOW, GREEN, BLUE, PURPLE
 }

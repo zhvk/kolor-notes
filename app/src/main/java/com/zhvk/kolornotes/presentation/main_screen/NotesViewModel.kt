@@ -21,7 +21,6 @@ class NotesViewModel @Inject constructor(
 ) : ViewModel() {
 
     val allNotes: MutableStateFlow<List<Note>> = MutableStateFlow<List<Note>>(listOf())
-    val note: MutableStateFlow<Note> = MutableStateFlow<Note>(Note())
 
     fun getAllNotes() = viewModelScope.launch(Dispatchers.IO) {
         noteRepository.getAllNotesFromRoom().collectLatest {
@@ -36,13 +35,6 @@ class NotesViewModel @Inject constructor(
         }.launchIn(this)
     }*/
 
-    fun getNote(id: Long) = viewModelScope.launch(Dispatchers.IO) {
-        noteRepository.getNoteFromRoom(id).collectLatest {
-            note.value = it // UI state is updated at this point
-            Log.d("TAG", "Note gotten: " + note.value.toString())
-        }
-    }
-
     fun addNote(newNote: Note) = viewModelScope.launch(Dispatchers.IO) {
         Log.d("TAG", "Note to be added: $newNote")
         newNote.dateUpdated = getCurrentDateTime(null)
@@ -52,8 +44,6 @@ class NotesViewModel @Inject constructor(
         // thread after you've retrieved the data.
         withContext(Dispatchers.Main) {
             getAllNotes()
-            getNote(newId)
-            Log.d("TAG", "Note added?: " + note.value.toString())
         }
     }
 
@@ -62,15 +52,6 @@ class NotesViewModel @Inject constructor(
         newNote.dateUpdated = getCurrentDateTime(null)
         newNote.backgroundColor = NoteColor.values().random()
         return noteRepository.addNoteToRoom(newNote)
-    }
-
-    fun updateNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
-        note.dateUpdated = getCurrentDateTime(null)
-        noteRepository.updateNoteInRoom(note)
-    }
-
-    fun deleteNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
-        noteRepository.deleteNoteFromRoom(note)
     }
 
     fun deleteAllNotes() = viewModelScope.launch(Dispatchers.IO) {
