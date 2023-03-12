@@ -1,12 +1,12 @@
-package com.zhvk.kolornotes.presentation.note_screen
+package com.zhvk.kolornotes.feature_note.presentation.note_screen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhvk.kolornotes.data.repository.NoteRepository
-import com.zhvk.kolornotes.domain.model.Note
-import com.zhvk.kolornotes.domain.model.NoteColor
-import com.zhvk.kolornotes.domain.model.NoteColorItem
+import com.zhvk.kolornotes.feature_note.data.repository.NoteRepositoryImpl
+import com.zhvk.kolornotes.feature_note.domain.model.Note
+import com.zhvk.kolornotes.feature_note.domain.model.NoteColor
+import com.zhvk.kolornotes.feature_note.domain.model.NoteColorItem
 import com.zhvk.kolornotes.utils.getCurrentDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteViewModel @Inject constructor(
-    private val noteRepository: NoteRepository
+    private val noteRepository: NoteRepositoryImpl
 ) : ViewModel() {
     val note: MutableStateFlow<Note> = MutableStateFlow<Note>(Note())
 

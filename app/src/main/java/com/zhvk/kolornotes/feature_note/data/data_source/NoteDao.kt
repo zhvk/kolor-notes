@@ -1,8 +1,8 @@
-package com.zhvk.kolornotes.data.network
+package com.zhvk.kolornotes.feature_note.data.data_source
 
 import androidx.room.*
 import com.zhvk.kolornotes.core.Constants.Companion.NOTES_TABLE
-import com.zhvk.kolornotes.domain.model.Note
+import com.zhvk.kolornotes.feature_note.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
 @Dao

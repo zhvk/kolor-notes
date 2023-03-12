@@ -2,22 +2,31 @@ package com.zhvk.kolornotes.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val DarkGray = Color(0xFF202020)
+val LightBlue = Color(0xFFD7E8DE)
+
+// 50 Shades of Gray
+val Gray100 = Color(0xfff8f9fa)
+val Gray200 = Color(0xffe9ecef)
+val Gray300 = Color(0xffdee2e6)
+val Gray400 = Color(0xffced4da)
+val Gray500 = Color(0xffadb5bd)
+val Gray600 = Color(0xff6c757d)
+val Gray700 = Color(0xff495057)
+val Gray800 = Color(0xff343a40)
+val Gray900 = Color(0xff212529)
 
 // Coolors
-val midnightGreenEagleGreen = Color(0xFF1A535C)
-val mediumTurquoise = Color(0xFF4ECDC4)
-val mintCream = Color(0xFFF7FFF7)
-val bittersweet = Color(0XFFFF6B6B)
-val yellowCrayola = Color(0xFFFFE66D)
-val aliceBlue = Color(0xFFE4EEF1)
+val MidnightGreenEagleGreen = Color(0xFF1A535C)
+val MediumTurquoise = Color(0xFF4ECDC4)
+val MintCream = Color(0xFFF7FFF7)
+val Bittersweet = Color(0XFFFF6B6B)
+val YellowCrayola = Color(0xFFFFE66D)
+val AliceBlue = Color(0xFFE4EEF1)
 
 // Pastel colors
-val pastel_purple = Color(0xFFE8DFF5)
-val pastel_red = Color(0xFFFCE1E4)
-val pastel_yellow = Color(0xFFFCF4DD)
-val pastel_green = Color(0xFFDDEDEA)
-val pastel_blue = Color(0xFFDAEAF6)
+val PastelPurple = Color(0xFFE8DFF5)
+val PastelRed = Color(0xFFFCE1E4)
+val PastelYellow = Color(0xFFFCF4DD)
+val PastelGreen = Color(0xFFDDEDEA)
+val PastelBlue = Color(0xFFDAEAF6)

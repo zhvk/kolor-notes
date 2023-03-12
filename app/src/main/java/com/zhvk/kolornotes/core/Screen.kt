@@ -1,4 +1,4 @@
-package com.zhvk.kolornotes.navigation
+package com.zhvk.kolornotes.core
 
 import com.zhvk.kolornotes.core.Constants.Companion.MAIN_SCREEN
 import com.zhvk.kolornotes.core.Constants.Companion.NOTE_SCREEN

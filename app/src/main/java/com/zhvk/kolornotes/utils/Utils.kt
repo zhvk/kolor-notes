@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.zhvk.kolornotes.R
-import com.zhvk.kolornotes.domain.model.Note
-import com.zhvk.kolornotes.domain.model.NoteColor
+import com.zhvk.kolornotes.feature_note.domain.model.Note
+import com.zhvk.kolornotes.feature_note.domain.model.NoteColor
 import java.text.SimpleDateFormat
 import java.util.*
 

@@ -1,4 +1,4 @@
-package com.zhvk.kolornotes.presentation.main_screen
+package com.zhvk.kolornotes.feature_note.presentation.main_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,9 +31,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zhvk.kolornotes.R
 import com.zhvk.kolornotes.core.Constants.Companion.NOTE_ID
-import com.zhvk.kolornotes.domain.model.Note
+import com.zhvk.kolornotes.feature_note.domain.model.Note
 import com.zhvk.kolornotes.utils.getNotesComposable
-import com.zhvk.kolornotes.navigation.Screen
+import com.zhvk.kolornotes.core.Screen
 import com.zhvk.kolornotes.utils.noteColorValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -123,8 +123,8 @@ fun SearchCard(
 
 @Composable
 fun NoteCardList(
-    notesViewModel: NotesViewModel,
-    navController: NavController
+        notesViewModel: NotesViewModel,
+        navController: NavController
 ) {
     LazyColumn(
         modifier = Modifier
@@ -143,8 +143,8 @@ fun NoteCardList(
 
 @Composable
 fun NoteCardItem(
-    note: (Note),
-    onClicked: (Long) -> Unit
+        note: (Note),
+        onClicked: (Long) -> Unit
 ) {
     Card(
         modifier = Modifier

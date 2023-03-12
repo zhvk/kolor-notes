@@ -1,4 +1,4 @@
-package com.zhvk.kolornotes.navigation
+package com.zhvk.kolornotes.feature_note.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -7,8 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.zhvk.kolornotes.core.Constants.Companion.NOTE_ID
-import com.zhvk.kolornotes.presentation.main_screen.MainScreen
-import com.zhvk.kolornotes.presentation.note_screen.NoteScreen
+import com.zhvk.kolornotes.core.Screen
+import com.zhvk.kolornotes.feature_note.presentation.main_screen.MainScreen
+import com.zhvk.kolornotes.feature_note.presentation.note_screen.NoteScreen
 
 @Composable
 fun Navigation(

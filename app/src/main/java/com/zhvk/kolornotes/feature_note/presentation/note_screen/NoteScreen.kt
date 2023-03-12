@@ -1,4 +1,4 @@
-package com.zhvk.kolornotes.presentation.note_screen
+package com.zhvk.kolornotes.feature_note.presentation.note_screen
 
 import android.content.Context
 import android.content.Intent
@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zhvk.kolornotes.R
-import com.zhvk.kolornotes.domain.model.Note
-import com.zhvk.kolornotes.domain.model.NoteColor
+import com.zhvk.kolornotes.feature_note.domain.model.Note
+import com.zhvk.kolornotes.feature_note.domain.model.NoteColor
 import com.zhvk.kolornotes.ui.theme.*
 import com.zhvk.kolornotes.utils.noteColorValue
 import kotlinx.coroutines.launch
@@ -38,9 +38,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NoteScreen(
-    navController: NavController,
-    noteViewModel: NoteViewModel = hiltViewModel(),
-    noteId: Long?
+        navController: NavController,
+        noteViewModel: NoteViewModel = hiltViewModel(),
+        noteId: Long?
 ) {
     // Get Note State
     if (noteId != null && noteId != 0L) // TODO: Test w/o this because noteId should always be passed
@@ -119,8 +119,8 @@ fun Toolbar(
 
 @Composable
 fun NoteComposable(
-    noteViewModel: NoteViewModel,
-    noteState: Note
+        noteViewModel: NoteViewModel,
+        noteState: Note
 ) {
 
     // Note UI
@@ -226,8 +226,8 @@ fun QuickActionBarNoteScreen(
 
 @Composable
 fun ColorPickerBottomSheet(
-    noteViewModel: NoteViewModel,
-    noteState: Note
+        noteViewModel: NoteViewModel,
+        noteState: Note
 ) {
 
     Column() {
@@ -268,8 +268,8 @@ fun ColorPickerBottomSheet(
 
 @Composable
 fun RoundedCheckView(
-    selectedItem: NoteColor,
-    noteColorOption: NoteColor,
+        selectedItem: NoteColor,
+        noteColorOption: NoteColor,
 ) {
     val isSelected = remember { mutableStateOf(false) }
     val circleThickness = remember { mutableStateOf(1.dp) }
