@@ -7,6 +7,8 @@ interface NoteRepository {
 
     fun getAllNotesFromRoom(): Flow<List<Note>>
 
+    fun getAllNotesFromRoomOrdered(): Flow<List<Note>>
+
     fun getNoteFromRoom(id: Long): Flow<Note>
 
     fun addNoteToRoom(note: Note): Long

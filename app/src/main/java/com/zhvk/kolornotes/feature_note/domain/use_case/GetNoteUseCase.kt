@@ -31,10 +31,10 @@ class GetNoteUseCase(
     }
 }
 
-enum class NoteOrder {
-    ASCENDING, DESCENDING
-}
-
 enum class OrderType {
     DATE, TITLE, COLOR
+}
+
+enum class NoteOrder {
+    ASCENDING, DESCENDING
 }

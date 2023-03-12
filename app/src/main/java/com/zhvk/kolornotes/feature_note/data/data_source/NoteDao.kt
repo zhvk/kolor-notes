@@ -14,8 +14,8 @@ interface NoteDao {
     @Query("SELECT * FROM $NOTES_TABLE")
     fun getAllNotes(): Flow<List<Note>>
 
-//    @Query("SELECT * FROM $NOTES_TABLE ORDER BY date_updated DESC")
-//    fun getAllOrdered(): List<Note>
+    @Query("SELECT * FROM $NOTES_TABLE ORDER BY date_updated DESC")
+    fun getAllOrdered(): Flow<List<Note>>
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Note>

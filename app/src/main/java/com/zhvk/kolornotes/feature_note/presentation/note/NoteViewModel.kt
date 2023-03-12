@@ -1,4 +1,4 @@
-package com.zhvk.kolornotes.feature_note.presentation.note_screen
+package com.zhvk.kolornotes.feature_note.presentation.note
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

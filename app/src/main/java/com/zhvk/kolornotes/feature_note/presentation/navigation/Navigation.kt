@@ -8,8 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.zhvk.kolornotes.core.Constants.Companion.NOTE_ID
 import com.zhvk.kolornotes.core.Screen
-import com.zhvk.kolornotes.feature_note.presentation.main_screen.MainScreen
-import com.zhvk.kolornotes.feature_note.presentation.note_screen.NoteScreen
+import com.zhvk.kolornotes.feature_note.presentation.note.components.NoteScreen
+import com.zhvk.kolornotes.feature_note.presentation.notes.components.MainScreen
 
 @Composable
 fun Navigation(
