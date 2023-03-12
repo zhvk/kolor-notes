@@ -6,6 +6,7 @@ val DarkGray = Color(0xFF202020)
 val LightBlue = Color(0xFFD7E8DE)
 
 // 50 Shades of Gray
+val MyWhite = Color(0xffffffff)
 val Gray100 = Color(0xfff8f9fa)
 val Gray200 = Color(0xffe9ecef)
 val Gray300 = Color(0xffdee2e6)
@@ -15,6 +16,7 @@ val Gray600 = Color(0xff6c757d)
 val Gray700 = Color(0xff495057)
 val Gray800 = Color(0xff343a40)
 val Gray900 = Color(0xff212529)
+val MyBlack = Color(0xff000000)
 
 // Coolors
 val MidnightGreenEagleGreen = Color(0xFF1A535C)

@@ -2,10 +2,10 @@ package com.zhvk.kolornotes.feature_note.presentation.notes
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhvk.kolornotes.feature_note.domain.model.Note
-import com.zhvk.kolornotes.feature_note.domain.model.NoteColor
 import com.zhvk.kolornotes.feature_note.domain.repository.NoteRepository
 import com.zhvk.kolornotes.feature_note.domain.use_case.NoteOrder
 import com.zhvk.kolornotes.feature_note.domain.use_case.OrderType
@@ -58,7 +58,7 @@ class NotesViewModel @Inject constructor(
     fun addBlankNote(): Long {
         val newNote = Note()
         newNote.dateUpdated = getCurrentDateTime(null)
-        newNote.backgroundColor = NoteColor.values().random()
+        newNote.color = Note.noteColors.random().toArgb()
         return noteRepository.addNoteToRoom(newNote)
     }
 

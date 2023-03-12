@@ -10,13 +10,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zhvk.kolornotes.feature_note.domain.model.Note
 import com.zhvk.kolornotes.feature_note.presentation.note.NoteViewModel
 import com.zhvk.kolornotes.ui.theme.*
-import com.zhvk.kolornotes.utils.noteColorValue
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -51,7 +51,7 @@ fun NoteScreen(
     ModalBottomSheetLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(noteColorValue(noteState.backgroundColor)),
+            .background(Color(noteState.color)),
         sheetState = sheetState,
         sheetContent = {
             ColorPickerBottomSheet(

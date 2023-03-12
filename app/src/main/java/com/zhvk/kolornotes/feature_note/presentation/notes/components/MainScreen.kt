@@ -16,7 +16,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zhvk.kolornotes.R
 import com.zhvk.kolornotes.feature_note.presentation.notes.NotesViewModel
-import com.zhvk.kolornotes.utils.getNotesComposable
 
 @Composable
 fun MainScreen(
@@ -55,7 +54,7 @@ fun SimpleTextField() {
 }
 
 // TODO: Populate Database only if DB is empty
-@Composable
+/*@Composable
 fun PopulateDatabase(
     notesViewModel: NotesViewModel
 ) {
@@ -66,4 +65,4 @@ fun PopulateDatabase(
     for (note in getNotesComposable()) {
         notesViewModel.addNote(note)
     }
-}
+}*/

@@ -16,14 +16,14 @@ class GetNoteUseCase(
                     when (orderType) {
                         OrderType.DATE -> notes.sortedBy { it.dateUpdated }
                         OrderType.TITLE -> notes.sortedBy { it.noteTitle }
-                        OrderType.COLOR -> notes.sortedBy { it.backgroundColor }
+                        OrderType.COLOR -> notes.sortedBy { it.color }
                     }
                 }
                 NoteOrder.DESCENDING -> {
                     when (orderType) {
                         OrderType.DATE -> notes.sortedByDescending { it.dateUpdated }
                         OrderType.TITLE -> notes.sortedByDescending { it.noteTitle }
-                        OrderType.COLOR -> notes.sortedByDescending { it.backgroundColor }
+                        OrderType.COLOR -> notes.sortedByDescending { it.color }
                     }
                 }
             }

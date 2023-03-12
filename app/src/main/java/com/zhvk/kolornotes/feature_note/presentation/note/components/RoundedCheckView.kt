@@ -20,13 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.zhvk.kolornotes.R
-import com.zhvk.kolornotes.feature_note.domain.model.NoteColor
-import com.zhvk.kolornotes.utils.noteColorValue
 
 @Composable
 fun RoundedCheckView(
-    selectedItem: NoteColor,
-    noteColorOption: NoteColor,
+    selectedItem: Color,
+    noteColorOption: Color,
 ) {
     val isSelected = remember { mutableStateOf(false) }
     val circleThickness = remember { mutableStateOf(1.dp) }
@@ -45,7 +43,7 @@ fun RoundedCheckView(
         modifier = Modifier
             .clip(CircleShape)
             .size(60.dp)
-            .background(noteColorValue(noteColorOption))
+            .background(noteColorOption)
             .border(BorderStroke(circleThickness.value, borderColor.value), shape = CircleShape)
             .padding(circleThickness.value)
             .clip(CircleShape),

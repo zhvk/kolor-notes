@@ -8,12 +8,13 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.zhvk.kolornotes.R
 import com.zhvk.kolornotes.feature_note.domain.model.Note
-import com.zhvk.kolornotes.feature_note.domain.model.NoteColor
 import com.zhvk.kolornotes.feature_note.presentation.note.NoteViewModel
 
 @Composable
@@ -33,13 +34,13 @@ fun ColorPickerBottomSheet(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
 
-            for (noteColorOption in NoteColor.values()) {
+            for (noteColorOption in Note.noteColors) {
                 item {
                     Box(
                         modifier = Modifier.selectable(
-                            selected = (noteState.backgroundColor == noteColorOption),
+                            selected = (noteState.color == noteColorOption.toArgb()),
                             onClick = {
-                                noteState.backgroundColor = noteColorOption
+                                noteState.color = noteColorOption.toArgb()
                                 noteViewModel.updateNote(noteState)
                                 Log.d("TAG", "UPDATE NOTE")
                             },
@@ -47,7 +48,7 @@ fun ColorPickerBottomSheet(
                         )
                     ) {
                         RoundedCheckView(
-                            selectedItem = noteState.backgroundColor!!,
+                            selectedItem = Color(noteState.color),
                             noteColorOption = noteColorOption
                         )
                     }

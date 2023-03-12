@@ -1,11 +1,12 @@
 package com.zhvk.kolornotes.feature_note.presentation.note
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhvk.kolornotes.feature_note.data.repository.NoteRepositoryImpl
 import com.zhvk.kolornotes.feature_note.domain.model.Note
-import com.zhvk.kolornotes.feature_note.domain.model.NoteColor
 import com.zhvk.kolornotes.feature_note.domain.model.NoteColorItem
 import com.zhvk.kolornotes.utils.getCurrentDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,14 +42,14 @@ class NoteViewModel @Inject constructor(
         noteRepository.deleteNoteFromRoom(note)
     }
 
-    fun updateNoteColor(note: Note, noteColor: NoteColor) {
-        note.backgroundColor = noteColor
+    fun updateNoteColor(note: Note, noteColor: Color) {
+        note.color = noteColor.toArgb()
         updateNote(note)
     }
 
-    private fun setColorItems() : MutableList<NoteColorItem> {
+    private fun setColorItems(): MutableList<NoteColorItem> {
         val noteColorItems: MutableList<NoteColorItem> = mutableListOf()
-        val noteColors = NoteColor.values()
+        val noteColors = Note.noteColors
 
         noteColors.forEach {
             noteColorItems.add(NoteColorItem(false, it))
